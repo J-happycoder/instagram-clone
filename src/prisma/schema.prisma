@@ -25,3 +25,10 @@ model Post {
   title String 
   description String
 }
+
+model OneTimePassword {
+  id Int @id @default(autoincrement())
+  phoneNumber String @default("")
+  email String @default("")
+  oneTimePassword Int
+}

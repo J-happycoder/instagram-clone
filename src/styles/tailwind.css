@@ -9,12 +9,6 @@
 }
 
 @layer components {
-  .authentication-input {
-    @apply mt-3 mx-3 bg-black p-3 rounded border border-zinc-900 font-light focus:outline-none text-white z-0;
-  }
-  .authentication-label {
-    @apply text-zinc-500 px-1 font-light peer-focus:text-xs top-6 peer-focus:top-1 hover:cursor-text transition-all duration-200 ease-in-out absolute left-6 bg-black;
-  }
   .continue-button {
     @apply bg-black m-3 text-white p-3 rounded hover:cursor-pointer border border-zinc-900 font-bold text-center;
   }

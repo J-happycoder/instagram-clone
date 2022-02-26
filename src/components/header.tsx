@@ -11,7 +11,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href="/join">
+            <Link href="/phone-join">
               <a>Join</a>
             </Link>
           </li>

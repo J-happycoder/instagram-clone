@@ -13,10 +13,13 @@
   "dependencies": {
     "@prisma/client": "^3.9.2",
     "bcrypt": "^5.0.1",
+    "country-code-lookup": "^0.0.20",
+    "country-data-list": "^1.2.1",
     "iron-session": "^6.0.5",
     "next": "12.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-phone-number-input": "^3.1.46",
     "twilio": "^3.74.0"
   },
   "devDependencies": {
