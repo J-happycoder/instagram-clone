@@ -14,10 +14,9 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  email String 
-  name String
-  username String 
-  password String
+  email String @default("")
+  wholePhoneNumber String @default("")
+  name String @default("")
 }
 
 model Post {
@@ -28,7 +27,7 @@ model Post {
 
 model OneTimePassword {
   id Int @id @default(autoincrement())
-  phoneNumber String @default("")
+  wholePhoneNumber String @default("")
   email String @default("")
   oneTimePassword Int
 }

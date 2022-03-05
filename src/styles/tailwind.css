@@ -10,9 +10,12 @@
 
 @layer components {
   .continue-button {
-    @apply bg-black m-3 text-white p-3 rounded hover:cursor-pointer border border-zinc-900 font-bold text-center;
+    @apply bg-black text-white font-bold text-center p-3 m-3 rounded border border-zinc-800 cursor-pointer disabled:cursor-not-allowed;
   }
   .form {
     @apply m-auto w-1/4 flex flex-col mt-60 bg-black rounded text-sm relative;
+  }
+  .input {
+    @apply mt-3 mx-3 bg-black p-3 rounded border border-zinc-800 font-light focus:outline-none text-white z-0 text-sm;
   }
 }

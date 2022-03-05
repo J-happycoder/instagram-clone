@@ -1,14 +1,13 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Header from "../components/header";
+import useUser from "../../lib/useUser";
+import Title from "../components/title";
 
 const Home: NextPage = () => {
+  const { user, mutateUser } = useUser();
   return (
     <div>
-      <Head>
-        <title>Home | Instagram</title>
-      </Head>
-      <Header></Header>
+      <Title title="Home" />
+      <span className="text-white">{JSON.stringify(user)}</span>
     </div>
   );
 };
