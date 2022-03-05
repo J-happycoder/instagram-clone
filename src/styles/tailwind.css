@@ -10,12 +10,12 @@
 
 @layer components {
   .continue-button {
-    @apply bg-black text-white font-bold text-center p-3 m-3 rounded border border-zinc-800 cursor-pointer disabled:cursor-not-allowed;
+    @apply bg-zinc-800 text-white font-bold text-center p-3 m-3 cursor-pointer disabled:cursor-not-allowed;
   }
   .form {
-    @apply m-auto w-1/4 flex flex-col mt-60 bg-black rounded text-sm relative;
+    @apply m-auto w-1/4 flex flex-col mt-60 p-3 bg-black rounded text-sm relative;
   }
   .input {
-    @apply mt-3 mx-3 bg-black p-3 rounded border border-zinc-800 font-light focus:outline-none text-white z-0 text-sm;
+    @apply mt-3 mx-3 bg-black p-3 border border-zinc-800 font-light focus:outline-none text-white z-0 text-sm;
   }
 }

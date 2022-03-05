@@ -1,15 +1,24 @@
-import type { NextPage } from "next";
-import useUser from "../../lib/useUser";
+import type { GetStaticProps, NextPage } from "next";
+import prisma from "../../lib/prismaClient";
 import Title from "../components/title";
 
-const Home: NextPage = () => {
-  const { user, mutateUser } = useUser();
+const Home: NextPage = ({ posts }: any) => {
   return (
     <div>
       <Title title="Home" />
-      <span className="text-white">{JSON.stringify(user)}</span>
+      {posts.map((post: any) => (
+        <div>
+          <span className="text-white">{post.title}</span>
+          <span className="text-white">{post.description}</span>
+        </div>
+      ))}
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await prisma.post.findMany();
+  return { props: { posts } };
 };
 
 export default Home;

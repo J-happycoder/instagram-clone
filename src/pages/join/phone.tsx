@@ -94,7 +94,6 @@ const PhoneJoin: NextPage = () => {
     if (!success) {
       return setError("Joining Error. Please try again.");
     }
-    await router.push("/login/phone");
   };
   const handlePhoneJoin = async (event: any) => {
     setIsLoading(true);
@@ -105,6 +104,7 @@ const PhoneJoin: NextPage = () => {
       return;
     }
     await join();
+    await router.push("/login/phone");
     setIsLoading(false);
   };
 
@@ -145,7 +145,7 @@ const PhoneJoin: NextPage = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <div className="mx-3 rounded border border-zinc-800 p-3">
+            <div className="mx-3 rounded border border-zinc-700 p-3">
               <select
                 value={callingCode}
                 onChange={onSelectCountry}

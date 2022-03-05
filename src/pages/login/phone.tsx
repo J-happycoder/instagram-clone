@@ -5,6 +5,7 @@ import Title from "../../components/title";
 import callingCodeList from "../../../lib/callingCodeList";
 import { unknown, userNotFound } from "../../../lib/errorTypes";
 import useUser from "../../../lib/useUser";
+import { useRouter } from "next/router";
 
 const SMSAccessToken = process.env.NEXT_PUBLIC_SMS_ACCESS_TOKEN;
 
@@ -15,6 +16,7 @@ const PhoneLogin: NextPage = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [callingCode, setCallingCode] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   const { user, mutateUser } = useUser();
 
@@ -60,7 +62,8 @@ const PhoneLogin: NextPage = () => {
     setErrorMessage("");
     const exists = await checkExistingUser();
     if (!exists) {
-      return setError("The user does not Exist.");
+      setError("The user does not Exist.");
+      return setIsLoading(false);
     }
     const sended = await sendSMSAndReturnSended();
     setVerificationCodeSended(sended);
@@ -101,9 +104,11 @@ const PhoneLogin: NextPage = () => {
     event.preventDefault();
     const isCodeCorrect = await confirmCode();
     if (!isCodeCorrect) {
-      return setError("Incorrect Code.");
+      setError("Incorrect Code.");
+      return setIsLoading(false);
     }
     await login();
+    await router.push("/");
     setIsLoading(false);
   };
 
@@ -143,7 +148,7 @@ const PhoneLogin: NextPage = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <div className="mx-3 rounded border border-zinc-900 p-3">
+            <div className="mx-3 rounded border border-zinc-700 p-3">
               <select
                 value={callingCode}
                 onChange={onSelectCountry}
