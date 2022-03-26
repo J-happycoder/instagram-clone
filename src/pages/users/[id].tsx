@@ -1,15 +1,17 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Header from "../../components/header";
+import { QueryString } from "../../types";
 
 const Profile: NextPage = () => {
-  const [id, setId] = useState();
-  const router = useRouter();
+  const [id, setId] = useState<QueryString>();
+  const router: NextRouter = useRouter();
   useEffect(() => {
-    setId(router.query.id);
-  });
+    const id: QueryString = router.query.id;
+    setId(id);
+  }, []);
   return (
     <div>
       <Head>

@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import Link from "next/link";
 import Title from "../../components/title";
 import callingCodeList from "../../../lib/callingCodeList";
-import { unknown, userNotFound } from "../../../lib/errorTypes";
 import useUser from "../../../lib/useUser";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 
 const SMSAccessToken = process.env.NEXT_PUBLIC_SMS_ACCESS_TOKEN;
 
@@ -16,21 +15,21 @@ const PhoneLogin: NextPage = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [callingCode, setCallingCode] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
+  const router: NextRouter = useRouter();
 
-  const { user, mutateUser } = useUser();
+  const { mutateUser } = useUser();
 
   const setError = (message: string) => {
     setErrorMessage(message);
     setVerificationCodeSended(false);
   };
-
   const getWholePhoneNumber = () => {
-    const wholePhoneNumber = `+${callingCode}${phoneNumber}`;
+    const wholePhoneNumber: string = `+${callingCode}${phoneNumber}`;
     return wholePhoneNumber;
   };
+  const initError = () => setErrorMessage("");
 
-  const sendSMSAndReturnSended = async () => {
+  const sendSMS = async () => {
     const wholePhoneNumber = getWholePhoneNumber();
     const SMSInformation = JSON.stringify({
       SMSAccessToken,
@@ -42,7 +41,7 @@ const PhoneLogin: NextPage = () => {
         body: SMSInformation,
       })
     ).json();
-    return sended;
+    setVerificationCodeSended(sended);
   };
   const checkExistingUser = async () => {
     const wholePhoneNumber = getWholePhoneNumber();
@@ -56,17 +55,16 @@ const PhoneLogin: NextPage = () => {
     ).json();
     return exists;
   };
-  const sendVerificationCode = async (event: any) => {
+  const sendVerificationCode: FormEventHandler<HTMLFormElement> = async (event) => {
     setIsLoading(true);
     event.preventDefault();
-    setErrorMessage("");
+    initError();
     const exists = await checkExistingUser();
     if (!exists) {
       setError("The user does not Exist.");
       return setIsLoading(false);
     }
-    const sended = await sendSMSAndReturnSended();
-    setVerificationCodeSended(sended);
+    await sendSMS();
     setIsLoading(false);
   };
 
@@ -85,21 +83,16 @@ const PhoneLogin: NextPage = () => {
   };
   const login = async () => {
     const wholePhoneNumber = getWholePhoneNumber();
-    const { error } = await (
-      await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          wholePhoneNumber,
-        }),
-      })
-    ).json();
-    if (error === unknown) {
-      return setError("Fail to Log In.");
-    }
+    await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({
+        wholePhoneNumber,
+      }),
+    });
     const { user } = await (await fetch("/api/user")).json();
     mutateUser(user);
   };
-  const handlePhoneLogin = async (event: any) => {
+  const handlePhoneLogin: FormEventHandler<HTMLFormElement> = async (event: any) => {
     setIsLoading(true);
     event.preventDefault();
     const isCodeCorrect = await confirmCode();
@@ -112,13 +105,14 @@ const PhoneLogin: NextPage = () => {
     setIsLoading(false);
   };
 
-  const handleBack = () => {
-    setVerificationCodeSended(false);
-  };
+  const goBack = () => setVerificationCodeSended(false);
 
-  const handlePhoneNumberChange = (event: any) => setPhoneNumber(event.target.value);
-  const handleVerificationCodeChange = (event: any) => setVerificationCode(event.target.value);
-  const onSelectCountry = (event: any) => setCallingCode(event.target.value);
+  const handlePhoneNumberChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setPhoneNumber(event.target.value);
+  const handleVerificationCodeChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setVerificationCode(event.target.value);
+  const onSelectCountry: ChangeEventHandler<HTMLSelectElement> = (event) =>
+    setCallingCode(Number(event.target.value));
   return (
     <div>
       <Title title="Join" />
@@ -132,15 +126,15 @@ const PhoneLogin: NextPage = () => {
           </span>
         ) : null}
         {verificationCodeSended ? (
-          <div>
+          <div className="flex flex-col">
             <i
-              onClick={handleBack}
+              onClick={goBack}
               className="fa-solid fa-arrow-left text-white hidden cursor-pointer ml-3"
             ></i>
             <input
               type="text"
               placeholder="Type the Verification Code."
-              className="input w-full"
+              className="input"
               required
               value={verificationCode}
               onChange={handleVerificationCodeChange}
@@ -148,7 +142,7 @@ const PhoneLogin: NextPage = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <div className="mx-3 rounded border border-zinc-700 p-3">
+            <div className="mx-3 border border-zinc-800 p-3">
               <select
                 value={callingCode}
                 onChange={onSelectCountry}

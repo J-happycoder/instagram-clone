@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prismaClient";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const confirm = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({});
   }
@@ -20,4 +20,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.json({ isCodeCorrect });
 };
 
-export default handler;
+export default confirm;

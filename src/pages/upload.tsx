@@ -1,12 +1,13 @@
 import { NextPage } from "next";
-import { useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import Title from "../components/title";
 
 const Upload: NextPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const handleUpload = () => {
-    fetch("/api/upload", {
+  const uploadPost: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    await fetch("/api/upload", {
       method: "POST",
       body: JSON.stringify({
         title,
@@ -14,12 +15,14 @@ const Upload: NextPage = () => {
       }),
     });
   };
-  const handleTitleChange = (event: any) => setTitle(event.target.value);
-  const handleDescriptionChange = (event: any) => setDescription(event.target.value);
+  const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setTitle(event.target.value);
+  const handleDescriptionChange: ChangeEventHandler<HTMLTextAreaElement> = (event) =>
+    setDescription(event.target.value);
   return (
     <div>
       <Title title="Upload" />
-      <form className="form" onSubmit={handleUpload}>
+      <form className="form" onSubmit={uploadPost}>
         <input
           type="text"
           placeholder="Title."

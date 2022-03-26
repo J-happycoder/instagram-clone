@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prismaClient";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const upload = async (req: NextApiRequest, res: NextApiResponse) => {
   const { title, description } = JSON.parse(req.body);
   await prisma.post.create({
     data: {
@@ -12,4 +12,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).end();
 };
 
-export default handler;
+export default upload;

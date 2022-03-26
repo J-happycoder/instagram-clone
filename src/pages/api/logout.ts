@@ -4,7 +4,7 @@ import sessionOptions from "../../../lib/sessionConfig";
 
 const logoutRoute = (req: NextApiRequest, res: NextApiResponse) => {
   req.session.destroy();
-  return res.status(200).redirect("/");
+  return res.status(200).json({});
 };
 
 export default withIronSessionApiRoute(logoutRoute, sessionOptions);

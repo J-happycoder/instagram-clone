@@ -4,18 +4,18 @@ import prisma from "../../../lib/prismaClient";
 
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
-const client = twilio(accountSid, authToken);
+const twilioClient = twilio(accountSid, authToken);
 const SMSAccessToken = process.env.NEXT_PUBLIC_SMS_ACCESS_TOKEN;
 
 const sendMessage = async (message: string) => {
-  await client.messages.create({
+  await twilioClient.messages.create({
     body: message,
     from: "+19035182760",
     to: "+8201083171236",
   });
 };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const SMSHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { SMSAccessToken: sendedToken, wholePhoneNumber } = JSON.parse(req.body);
   const verificationCode = Math.floor(Math.random() * 900000) + 100000;
   const passwordIncorrect = sendedToken !== SMSAccessToken;
@@ -28,10 +28,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       oneTimePassword: verificationCode,
     },
   });
-  // const message = `Your verification code is ${verificationCode}`;
-  // sendMessage(message)
+  const message = `Your verification code is ${verificationCode}`;
+  sendMessage(message);
 
   return res.status(200).json({ sended: true });
 };
 
-export default handler;
+export default SMSHandler;

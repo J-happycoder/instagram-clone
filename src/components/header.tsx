@@ -1,13 +1,17 @@
+import type { User } from "@prisma/client";
 import Link from "next/link";
+import { NextRouter, useRouter } from "next/router";
 import { useState } from "react";
 import useUser from "../../lib/useUser";
 
 const Header = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { user, mutateUser } = useUser();
+  const { user } = useUser();
+  const router: NextRouter = useRouter();
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await fetch("/api/logout");
+    await router.push("/");
     setIsLoggingOut(false);
   };
   return (

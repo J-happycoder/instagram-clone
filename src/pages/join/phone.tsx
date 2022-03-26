@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import Link from "next/link";
 import Title from "../../components/title";
 import callingCodeList from "../../../lib/callingCodeList";
-import useUser from "../../../lib/useUser";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 
 const SMSAccessToken = process.env.NEXT_PUBLIC_SMS_ACCESS_TOKEN;
 
@@ -16,18 +15,19 @@ const PhoneJoin: NextPage = () => {
   const [name, setName] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
+  const router: NextRouter = useRouter();
 
   const setError = (message: string) => {
     setErrorMessage(message);
     setVerificationCodeSended(false);
   };
   const getWholePhoneNumber = () => {
-    const wholePhoneNumber = `+${callingCode}${phoneNumber}`;
+    const wholePhoneNumber: string = `+${callingCode}${phoneNumber}`;
     return wholePhoneNumber;
   };
+  const initError = () => setErrorMessage("");
 
-  const sendSMSAndReturnSended = async () => {
+  const sendSMS = async () => {
     const wholePhoneNumber = getWholePhoneNumber();
     const SMSInformation = JSON.stringify({
       SMSAccessToken,
@@ -39,7 +39,7 @@ const PhoneJoin: NextPage = () => {
         body: SMSInformation,
       })
     ).json();
-    return sended;
+    setVerificationCodeSended(sended);
   };
   const checkExistingUser = async () => {
     const wholePhoneNumber = getWholePhoneNumber();
@@ -53,16 +53,16 @@ const PhoneJoin: NextPage = () => {
     ).json();
     return exists;
   };
-  const sendVerificationCode = async (event: any) => {
+  const sendVerificationCode: FormEventHandler<HTMLFormElement> = async (event) => {
     setIsLoading(true);
     event.preventDefault();
-    setErrorMessage("");
+    initError();
     const userExists = await checkExistingUser();
     if (userExists) {
-      return setError("The Account already Exist.");
+      setIsLoading(false);
+      return setError("The Account already Exists.");
     }
-    const sended = await sendSMSAndReturnSended();
-    setVerificationCodeSended(sended);
+    await sendSMS();
     setIsLoading(false);
   };
 
@@ -95,27 +95,28 @@ const PhoneJoin: NextPage = () => {
       return setError("Joining Error. Please try again.");
     }
   };
-  const handlePhoneJoin = async (event: any) => {
+  const handlePhoneJoin: FormEventHandler<HTMLFormElement> = async (event) => {
     setIsLoading(true);
     event.preventDefault();
     const isCodeCorrect = await confirmCode();
     if (!isCodeCorrect) {
-      setError("Code Incorrect.");
-      return;
+      return setError("Code Incorrect.");
     }
     await join();
     await router.push("/login/phone");
     setIsLoading(false);
   };
 
-  const handleBack = () => {
-    setVerificationCodeSended(false);
-  };
+  const goBack = () => setVerificationCodeSended(false);
 
-  const onSelectCountry = (event: any) => setCallingCode(event.target.value);
-  const handlePhoneNumberChange = (event: any) => setPhoneNumber(event.target.value);
-  const handleNameChange = (event: any) => setName(event.target.value);
-  const handleVerificationCodeChange = (event: any) => setVerificationCode(event.target.value);
+  const onSelectCountry: ChangeEventHandler<HTMLSelectElement> = (event) =>
+    setCallingCode(Number(event.target.value));
+  const handlePhoneNumberChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setPhoneNumber(event.target.value);
+  const handleNameChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setName(event.target.value);
+  const handleVerificationCodeChange: ChangeEventHandler<HTMLInputElement> = (event) =>
+    setVerificationCode(event.target.value);
   return (
     <div>
       <Title title="Join" />
@@ -131,7 +132,7 @@ const PhoneJoin: NextPage = () => {
         {verificationCodeSended ? (
           <div className="flex flex-col">
             <i
-              onClick={handleBack}
+              onClick={goBack}
               className="fa-solid fa-arrow-left text-white hidden cursor-pointer ml-3"
             ></i>
             <input
@@ -145,7 +146,7 @@ const PhoneJoin: NextPage = () => {
           </div>
         ) : (
           <div className="flex flex-col">
-            <div className="mx-3 rounded border border-zinc-700 p-3">
+            <div className="mx-3 rounded border border-zinc-800 p-3">
               <select
                 value={callingCode}
                 onChange={onSelectCountry}
