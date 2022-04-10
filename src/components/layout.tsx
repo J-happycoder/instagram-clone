@@ -1,4 +1,4 @@
-import { layoutProps } from "../types/layout";
+import { layoutProps } from "../types";
 import Fontawesome from "./fontawesome";
 import Header from "./header";
 
@@ -7,7 +7,7 @@ const Layout = ({ children }: layoutProps) => {
     <>
       <Header />
       <Fontawesome />
-      <main>{children}</main>
+      <main className="mb-32 mt-20">{children}</main>
     </>
   );
 };

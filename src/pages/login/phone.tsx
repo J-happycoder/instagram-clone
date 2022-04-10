@@ -118,13 +118,9 @@ const PhoneLogin: NextPage = () => {
       <Title title="Join" />
       <form
         onSubmit={verificationCodeSended ? handlePhoneLogin : sendVerificationCode}
-        className="form"
+        className="form mt-60"
       >
-        {errorMessage !== "" ? (
-          <span className="text-white text-sm mx-3 p-3 my-3 rounded border border-red-500">
-            {errorMessage}
-          </span>
-        ) : null}
+        {errorMessage !== "" ? <span className="error">{errorMessage}</span> : null}
         {verificationCodeSended ? (
           <div className="flex flex-col">
             <i

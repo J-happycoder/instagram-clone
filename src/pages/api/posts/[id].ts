@@ -1,18 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../../lib/prismaClient";
-import { QueryString } from "../../../types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const id: QueryString = req.query.id;
+  const id: string = String(req.query.id);
   if (id === "") {
     return res.status(404).end();
   }
-  const post = await prisma.post.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-  return res.status(200).json({ post });
+
+  const where = { where: { id } };
+
+  if (req.method === "GET") {
+    const post = await prisma.post.findUnique(where);
+    return res.status(200).json({ post });
+  }
+  if (req.method === "DELETE") {
+    await prisma.post.delete(where);
+    await fetch(
+      `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/images/v1/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.CF_TOKEN}`,
+        },
+      }
+    );
+    return res.status(200).end();
+  }
 };
 
 export default handler;

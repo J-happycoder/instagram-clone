@@ -122,15 +122,11 @@ const PhoneJoin: NextPage = () => {
       <Title title="Join" />
       <form
         onSubmit={verificationCodeSended ? handlePhoneJoin : sendVerificationCode}
-        className="form"
+        className="form mt-60"
       >
-        {errorMessage !== "" ? (
-          <span className="text-white text-sm mx-3 p-3 my-3 rounded border border-red-500">
-            {errorMessage}
-          </span>
-        ) : null}
+        {errorMessage !== "" ? <span className="error">{errorMessage}</span> : null}
         {verificationCodeSended ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-3">
             <i
               onClick={goBack}
               className="fa-solid fa-arrow-left text-white hidden cursor-pointer ml-3"
@@ -145,7 +141,7 @@ const PhoneJoin: NextPage = () => {
             />
           </div>
         ) : (
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-3">
             <div className="mx-3 rounded border border-zinc-800 p-3">
               <select
                 value={callingCode}

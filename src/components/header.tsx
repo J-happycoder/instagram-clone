@@ -6,16 +6,17 @@ import useUser from "../../lib/useUser";
 
 const Header = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { user } = useUser();
+  const { user, mutateUser } = useUser();
   const router: NextRouter = useRouter();
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await fetch("/api/logout");
+    await mutateUser();
     await router.push("/");
     setIsLoggingOut(false);
   };
   return (
-    <header className="bg-black text-white p-3 border-b border-zinc-800 font-extralight">
+    <header className="bg-black text-white fixed w-full top-0 z-20 p-3 border-b border-zinc-800 font-extralight">
       <nav className="w-7/12 mx-auto">
         <ul className="flex flex-row justify-between align-center">
           <li>

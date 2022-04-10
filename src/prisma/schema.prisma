@@ -20,9 +20,10 @@ model User {
 }
 
 model Post {
-  id Int @id @default(autoincrement())
+  id String @id
   title String 
   description String
+  hashTagList String
 }
 
 model OneTimePassword {
